@@ -16,7 +16,7 @@ class Storm:
         self.basin = str(basin)
 
     def __repr__(self):
-        return f"Storm('{self.year}','{self.storms}','{self.hurricanes}','{self.basin})"
+        return f"Storm('{self.year}','{self.storms}','{self.hurricanes}','{self.deaths}','{self.damage}','{self.basin})"
 
     def __str__(self):
         return str(self.__repr__())
