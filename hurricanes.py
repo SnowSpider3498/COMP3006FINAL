@@ -1,7 +1,8 @@
 # imports
-import requests, time
+import requests, time, urlopen
 from bs4 import BeautifulSoup as BS
 import matplotlib.pyplot as plt
+import pandas as pd
 
 start_time = time.monotonic()
 
@@ -24,19 +25,41 @@ class Storm:
 class StormData:
 
     def _get_data(self):
-        URL = 'https://www.wunderground.com/hurricane/archive/EP'
 
-        page = requests.get(URL)
-        
-        soup = BS(page.content, 'html.parser')
+        #getting html
+        URL = 'https://www.stormfax.com/huryear.htm'
+        page = requests.get(URL).text
+        soup = BS(page, 'html.parser')
 
-        table = soup.find('table', class_='mat-table cdk-table mat-sort')
+        #define table
+        table = soup.find('table')
+        #define rows
+        row = table.find_all('b')
 
-        print(table)
+        #define attributes
+        headers = []
+        years = []
+        namedStorms = []
+        hurricanes = []
+        majorHurricanes = []
 
-        # years = table.find_all('td', class_='mat-cell cdk-cell cdk-column-year mat-column-year ng-star-inserted')
+        # define headers
+        for header in row[:4]:
+            headers.append(header.text)
 
-        # print(years)
+        for idx, data in enumerate(row[4:]):
+            if idx < 171:
+                # print(data)
+                # define years
+                year = data.text[:4]
+                if len(year) == 4:
+                    years.append(year)
+                
+                # for i in data:
+
+        print(table.find())
+
+            
 
 
 # pretend main
