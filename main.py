@@ -2,7 +2,8 @@ import argparse, sys
 import csv
 import matplotlib.pyplot as plt
 from get_data import SeaTemps
-from avg_per_decade import _average_per_decade, _avg_lower_upper_decade
+from avg_per_decade import *
+from plot_sst import *
 
 
 def main():
@@ -12,7 +13,7 @@ def main():
                              help='command to execute')
     data_parser.add_argument('-o', '--ofile', metavar='<outfile>', dest='ofile', action='store')
     data_parser.add_argument('-p', '--plot', action='store_true', dest='plot')
-    data_parser.add_argument('-s', '--sort', metavar='<sort>', choices=['confidence', 'anomaly'], dest='sort')
+    data_parser.add_argument('-s', '--sort', metavar='<sort>', choices=['confidence', 'anomaly', 'merge'], dest='sort')
     args = data_parser.parse_args()
 
     if args.command == 'print':
@@ -25,43 +26,63 @@ def main():
             to_stdout.writerows(head_row)
         else:
             with open(args.ofile, 'w', newline='') as optimised_sst:
-                to_file = csv.writer(optimised_sst, quoting=csv.QUOTE_NONNUMERIC)
+                to_file = csv.writer(optimised_sst, quoting=csv.QUOTE_ALL)
                 to_file.writerows(head_row)
+
+        if args.plot is not None:
+            plot_standard_data(nh_sea_data.sea_values)
 
     if args.command == 'by_decade':
         if args.sort is None:
             if args.ofile is None:
-                data = _average_per_decade(nh_sea_data.sea_values)
-                confidence = _avg_lower_upper_decade(nh_sea_data.sea_values)
+                data = average_per_decade(nh_sea_data.sea_values)
+                confidence = avg_lower_upper_decade(nh_sea_data.sea_values)
                 data.to_csv(sys.stdout, header=False)
                 confidence.to_csv(sys.stdout, header=False)
             else:
                 with open(args.ofile, 'w', newline='') as decade_information:
-                    data = _average_per_decade(nh_sea_data.sea_values)
-                    confidence = _avg_lower_upper_decade(nh_sea_data.sea_values)
+                    data = average_per_decade(nh_sea_data.sea_values)
+                    confidence = avg_lower_upper_decade(nh_sea_data.sea_values)
                     data.to_csv(decade_information, header=False)
                     confidence.to_csv(sys.stdout, header=False)
-        elif args.sort == 'confidence':
-            print('Decade', '|', 'Lower Conf.', '|', 'Upper Conf.')
-            if args.ofile is None:
-                confidence = _avg_lower_upper_decade(nh_sea_data.sea_values)
-                confidence.to_csv(sys.stdout, header=False)
-            else:
-                with open(args.ofile, 'w', newline='') as confidence_information:
-                    data = _avg_lower_upper_decade(nh_sea_data.sea_values)
-                    data.to_csv(confidence_information, header=False)
+
+        # Sorts by anomaly from avg_per_decade
         elif args.sort == 'anomaly':
             if args.ofile is None:
                 print('Decade', '|', 'Average Anomaly')
-                data = _average_per_decade(nh_sea_data.sea_values)
+                data = average_per_decade(nh_sea_data.sea_values)
                 data.to_csv(sys.stdout, header=False)
             else:
                 with open(args.ofile, 'w', newline='') as decade_information:
-                    data = _average_per_decade(nh_sea_data.sea_values)
+                    data = average_per_decade(nh_sea_data.sea_values)
                     data.to_csv(decade_information, header=False)
+
+            if args.plot is not None:
+                plot_decade_anomalies(data)
+
+
+        # Sorts by confidence intervals from avg_per_decade
+        elif args.sort == 'confidence':
+            if args.ofile is None:
+                print('Decade', '|', 'Lower Conf.', '|', 'Upper Conf.')
+                confidence = avg_lower_upper_decade(nh_sea_data.sea_values)
+                confidence.to_csv(sys.stdout, header=False)
+            else:
+                with open(args.ofile, 'w', newline='') as confidence_information:
+                    confidence = avg_lower_upper_decade(nh_sea_data.sea_values)
+                    confidence.to_csv(confidence_information, header=False)
+
+            if args.plot is not None:
+                plot_decade_confidence(confidence)
+
+        elif args.sort == 'merge':
+            if args.plot is not None:
+                merged = merge(nh_sea_data.sea_values)
+                merge_decade(merged)
 
 
 if '__main__' == __name__:
     main()
 
+# Issue of running command then displaying the graph
 
