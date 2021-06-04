@@ -8,12 +8,11 @@ start_time = time.monotonic()
 
 class Storm:
 
-    def __init__(self, year, storms, hurricanes, deaths, damage, basin):
+    def __init__(self, year, storms, hurricanes, majors , basin):
         self.year = int(year)
         self.storms = int(storms)
         self.hurricanes = int(hurricanes)
-        self.deaths = int(deaths)
-        self.damage = int(damage) # millions USD
+        self.majors = int(majors)
         self.basin = str(basin)
 
     def __repr__(self):
@@ -55,10 +54,10 @@ class StormData:
                 if len(year) == 4:
                     years.append(year)
                 
-                # for i in data:
+                # for i in data:??
 
-        print(table.find())
-
+        print(headers)
+        print(years)
             
 
 
