@@ -1,18 +1,21 @@
 import csv, os.path, logging, requests
 from collections import namedtuple
-from refactor_sea_data import DisplaySeaTemps
+from refactor_data import DisplaySeaTemps, Storm
 from bs4 import BeautifulSoup as BS
 
+# root logger
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
+# adding DEBUG level information to log file
 fh = logging.FileHandler('SeaHurricane.log', 'w')
 fh.setLevel(logging.DEBUG)
-logging.addHandler(fh)
+logger.addHandler(fh)
 
 
 class SeaTemps:
-    annual_nh_sea_temps = requests.get('https://www.metoffice.gov.uk/hadobs/hadsst3/data/HadSST.3.1.1.0/diagnostics/HadSST.3.1.1.0_annual_nh_ts.txt')
+    annual_nh_sea_temps = requests.get(
+        'https://www.metoffice.gov.uk/hadobs/hadsst3/data/HadSST.3.1.1.0/diagnostics/HadSST.3.1.1.0_annual_nh_ts.txt')
     saved_nh_sst = 'nh_sst.txt'
     sea_values = []
 
@@ -61,49 +64,56 @@ class SeaTemps:
         else:
             logging.debug(self.annual_nh_sea_temps.status_code)
 
-# You could add the option to look at only the 1800's, 1900's or early 2000's
+##############################################################################################
 
 
 class StormData:
+    hurricane_values = []
 
     def __init__(self):
         self._get_data()
+        self.stormDataSet()
 
     def __iter__(self):
         return iter(self.dictData)
-        
+
     def _get_data(self):
-        #getting html
+        # getting html
         URL = 'https://www.stormfax.com/huryear.htm'
         page = requests.get(URL).text
         soup = BS(page, 'html.parser')
 
         logging.debug('response code from url: 200')
 
-        #define table
+        # define table
         table = soup.find('table')
-        #define headers
+        # define headers
         head = table.find_all('b')
         # define rows
         fullRow = table.find_all('tr')
 
-        #define attributes
-        self.headers = []
-        self.dictData = {}
-        self.csvStormDat = []
-
         # define algorithm for correct data pull
-        singles = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 28, 30, 31, 32, 33, 34, 37, 38, 39, 41, 43, 44, 45, 46, 49, 51, 53, 54, 56, 59, 60, 61, 62, 63, 64, 66,
-                   67, 68, 69, 70, 71, 72, 74, 76, 77, 78, 79, 84, 87, 88, 89, 90, 95, 96, 97, 101, 105, 106, 109, 111, 112, 114, 116, 117, 121, 122, 124, 126, 128, 131, 132, 135, 136, 140, 141, 142, 143, 146, 158, 163]
-        doubSing = [18, 29, 40, 47, 48, 50, 52, 55, 57, 58, 73, 75, 80, 81, 83, 85, 86, 91, 92, 93, 94, 98, 100, 102, 103, 104, 107, 108, 110, 113,
-                    115, 119, 120, 123, 125, 127, 129, 130, 133, 134, 137, 138, 139, 145, 148, 149, 150, 151, 152, 153, 155, 156, 157, 160, 162, 164, 165]
+        singles = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 28, 30, 31,
+                   32, 33, 34, 37, 38, 39, 41, 43, 44, 45, 46, 49, 51, 53, 54, 56, 59, 60, 61, 62, 63, 64, 66,
+                   67, 68, 69, 70, 71, 72, 74, 76, 77, 78, 79, 84, 87, 88, 89, 90, 95, 96, 97, 101, 105, 106, 109, 111,
+                   112, 114, 116, 117, 121, 122, 124, 126, 128, 131, 132, 135, 136, 140, 141, 142, 143, 146, 158, 163]
+        doubSing = [18, 29, 40, 47, 48, 50, 52, 55, 57, 58, 73, 75, 80, 81, 83, 85, 86, 91, 92, 93, 94, 98, 100, 102,
+                    103, 104, 107, 108, 110, 113,
+                    115, 119, 120, 123, 125, 127, 129, 130, 133, 134, 137, 138, 139, 145, 148, 149, 150, 151, 152, 153,
+                    155, 156, 157, 160, 162, 164, 165]
         doubDoub = [19, 27, 35, 36, 42, 65, 82,
                     99, 118, 144, 147, 154, 159, 161, 166]
+
+        # define attributes
+        self.headers = []
+        self.csvStormDat = []
+        self.dictData = {}
+
 
         # define headers
         for header in head[:4]:
             self.headers.append(header.text)
-    
+
         logging.debug('grab-table-data-hurricanes.txt')
         # define years, named storms, hurricanes, and major hurricanes
         for idx, data in enumerate(fullRow):
@@ -143,20 +153,12 @@ class StormData:
                         self.dictData[year] = (nameStorm, hurricane, majhurricane)
                         self.csvStormDat.append((year, nameStorm, hurricane, majhurricane))
 
-
     def stormDataSet(self):
 
         logging.debug('reformat-hurricane-data')
-        # define 
-        self.yrs = self.dictData.keys()
-        self.named = []
-        self.hurr = []
-        self.maj = []
 
-        for i in self.dictData.values():
-            self.named.append(int(i[0]))
-            self.hurr.append(int(i[1]))
-            self.maj.append(int(i[2]))
+        for i in self.csvStormDat:
+            self.hurricane_values.append(Storm(i[0], i[1], i[2], i[3]))
 
     def stormCSV(self):
 
@@ -171,5 +173,4 @@ class StormData:
 
             for row in self.csvStormDat:
                 writer.writerow(row)
-                
 
