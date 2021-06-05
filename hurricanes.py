@@ -91,9 +91,7 @@ class StormData:
                         # self.data.append(Storm(year, nameStorm, hurricane, majhurricane))
 
         
-
-
-    def graphStorm(self):
+    def graphData(self):
 
         self.yrs = self.dictData.keys()
         self.named = []
@@ -106,29 +104,38 @@ class StormData:
             self.maj.append(int(i[2]))
             
 
+    def graphStorm(self):            
+
         plt.style.use('dark_background')
         plt.plot(self.yrs, self.named, color='deeppink')
         plt.title('Named Storms per Year', color='white')
         plt.xlabel('Year', color='white')
         plt.ylabel('Named Storms', color='white')
         plt.xticks([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 158, 166], rotation = 75, fontsize = 7)
+        plt.yticks(fontsize=7)
         plt.tight_layout()
         plt.show()
         plt.savefig('stormsperyear')
 
-    # def graphHurricanes(self):
+    def graphHurricanes(self):
 
-    #     plt.style.use('dark_background')
-    #     plt.bar(self.yrs, self.hurr, color='green')
-    #     plt.bar(self.yrs, self,maj, bottom=self.hurr, color='red')
-    #     plt.title('Hurricanes per Year', color='white')
-    #     plt.xlabel('Year', color='white')
-    #     plt.ylabel('Named Storms', color='white')
-    #     plt.xticks([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 158, 166], rotation=75, fontsize=7)
-    #     plt.yticks(fontsize=7)
-    #     plt.tight_layout()
-    #     plt.show()
-    #     plt.savefig('hurricanes_majperyear')
+
+        # plt.style.use('dark_background')
+        fig, axs = plt.subplots(2, 1)
+        axs[0].plot(self.yrs, self.maj, color='darkmagenta')
+        axs[0].set_xlabel('Year', color='white')
+        axs[0].set_xticks([0, 20, 40, 60, 80, 100, 120, 140, 152, 166])
+        axs[0].set_ylabel('Major Hurricanes', color='white')
+
+        axs[1].bar(self.yrs, self.hurr, color='green')
+        axs[1].set_xlabel('Year', color='white')
+        axs[1].set_xticks([0, 20, 40, 60, 80, 100, 120, 140, 152, 166])
+        axs[1].set_ylabel('Hurricanes', color='white')
+
+        # fig.title('Hurricanes per Year', color='white')
+        fig.tight_layout()
+        fig.show()
+        fig.savefig('hurricanes_majperyear')
 
 
 # pretend main
@@ -139,9 +146,11 @@ def main():
 
     collectData._get_data()
 
+    collectData.graphData()
+
     collectData.graphStorm()
 
-    # collectData.graphHurricanes()
+    collectData.graphHurricanes()
 
 
 if __name__ == '__main__':
