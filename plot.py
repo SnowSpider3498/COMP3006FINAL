@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+from get_data import*
 
 
 # Standard years/anomaly plot
@@ -50,6 +51,43 @@ def merge_decade(args):
     plt.tight_layout()
     plt.show()
     plt.savefig('sst_merge')
+
+class StormPlots:
+
+    stormDat = StormData()
+
+    def graphStorm(self):
+
+        plt.style.use('dark_background')
+        plt.plot(stormDat.yrs, stormDat.named, color='deeppink')
+        plt.title('Named Storms per Year', color='white')
+        plt.xlabel('Year', color='white')
+        plt.ylabel('Named Storms', color='white')
+        plt.xticks([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110,
+                   120, 130, 140, 150, 158, 166], rotation=75, fontsize=7)
+        plt.yticks(fontsize=7)
+        plt.tight_layout()
+        plt.show()
+        plt.savefig('stormsperyear')
+
+    def graphHurricanes(self):
+
+        # plt.style.use('dark_background')
+        fig, axs = plt.subplots(2, 1)
+        axs[0].plot(stormDat.yrs, stormDat.maj, color='darkmagenta')
+        axs[0].set_xlabel('Year', color='white')
+        axs[0].set_xticks([0, 20, 40, 60, 80, 100, 120, 140, 152, 166])
+        axs[0].set_ylabel('Major Hurricanes', color='white')
+
+        axs[1].bar(stormDat.yrs, stormDat.hurr, color='green')
+        axs[1].set_xlabel('Year', color='white')
+        axs[1].set_xticks([0, 20, 40, 60, 80, 100, 120, 140, 152, 166])
+        axs[1].set_ylabel('Hurricanes', color='white')
+
+        # fig.title('Hurricanes per Year', color='white')
+        fig.tight_layout()
+        fig.show()
+        fig.savefig('hurricanes_majperyear')
 
 
 

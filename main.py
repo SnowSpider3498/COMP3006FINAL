@@ -1,8 +1,8 @@
 import argparse, sys
 import csv
-from get_data import SeaTemps
+from get_data import SeaTemps, StormData
 from data_manipulation import *
-from plot_sst import *
+from plot import *
 
 
 def main():
@@ -103,7 +103,7 @@ def main():
             if args.plot is not None:
                 merged = merge(nh_sea_data.sea_values)
                 merge_decade(merged)
-
+                
 
 if '__main__' == __name__:
     main()
