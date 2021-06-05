@@ -1,0 +1,10 @@
+matplotlib
+pandas
+argparse
+sys
+csv
+os.path
+requests
+collections - namedtuple
+unittest
+BeautifulSoup
