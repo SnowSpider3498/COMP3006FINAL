@@ -1,6 +1,6 @@
 import argparse, sys
 import csv
-from get_data import SeaTemps, StormData
+from get_data import SeaTemps
 from data_manipulation import *
 from plot import *
 
@@ -8,7 +8,7 @@ from plot import *
 def main():
     nh_sea_data = SeaTemps()
     data_parser = argparse.ArgumentParser(description='Compiling Hurricane Initiation with Sea Temperatures')
-    data_parser.add_argument('command', metavar='<command>', choices=['print', 'by_decade'], type=str,
+    data_parser.add_argument('command', metavar='<command>', choices=['print', 'by_decade', 'storm', 'merge_storms'], type=str,
                              help='command to execute')
     data_parser.add_argument('-o', '--ofile', metavar='<outfile>', dest='ofile', action='store')
     data_parser.add_argument('-p', '--plot', action='store_true', dest='plot')
@@ -50,11 +50,12 @@ def main():
                     to_file.writerows(head_row)
                 if args.sort == 'anomaly':
                     to_file.writerows(anomaly_row)
+                    if args.plot is not None:
+                        plot_standard_anomalies(nh_sea_data.sea_values)
                 if args.sort == 'confidence':
                     to_file.writerows(confidence_row)
-
-        if args.plot is not None:
-            plot_standard_data(nh_sea_data.sea_values)
+                    if args.plot is not None:
+                        plot_standard_confidence(nh_sea_data.sea_values)
 
     if args.command == 'by_decade':
         if args.sort is None:
@@ -103,11 +104,16 @@ def main():
             if args.plot is not None:
                 merged = merge(nh_sea_data.sea_values)
                 merge_decade(merged)
-                
+
+    if args.command == 'storm':
+        # graphStorm(StormData.hurricane_values)
+        graph_severe_hurricanes(StormData.hurricane_values)
+
+    if args.command == 'merge_storms':
+        combine_anomaly_storms(StormData.hurricane_values, SeaTemps.sea_values)
+
 
 if '__main__' == __name__:
     main()
 
 # Issue of running command then displaying the graph
-
-
