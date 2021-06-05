@@ -58,7 +58,7 @@ def plot_decade_confidence(args):
     plt.savefig('sst_up_low_confidence')
 
 
-# Merging the two sets of data
+# Merging both anomalies and confidence data
 def merge_decade(args):
     args.plot()
     plt.title('Sea Temperature Confidence and Anomalies per Decade')
@@ -68,17 +68,13 @@ def merge_decade(args):
     plt.show()
     plt.savefig('sst_merge')
 
-
-stormDat = StormData()
-
-
+# Graphs annual tropical storm values from 1851 to 2017
 def graphStorm(args):
     year, nameStorm, hurricane, majhurricane = [], [], [], []
     for x in args:
         year.append(x.year)
         nameStorm.append(x.storms)
         hurricane.append(x.hurricanes)
-
     plt.style.use('dark_background')
     plt.plot(year, nameStorm, color='deeppink')
     plt.title('Tropical Storms per Year', color='white')
@@ -90,6 +86,7 @@ def graphStorm(args):
     plt.savefig('stormsperyear')
 
 
+# Graphs major hurricane values from 1851 to 2017
 def graph_severe_hurricanes(args):
     year, hurricane, majhurricane = [], [], []
     for x in args:
@@ -110,6 +107,7 @@ def graph_severe_hurricanes(args):
     fig.savefig('hurricanes_majperyear')
 
 
+# Graphs the combined anomalies of sst and total tropical storms between 1851 and 2017    
 def combine_anomaly_storms(args, args2):
     year, nameStorm, hurricane = [], [], []
     for x in args:
@@ -128,9 +126,7 @@ def combine_anomaly_storms(args, args2):
 
     offset = 0
     new_fixed_axis = par1.get_grid_helper().new_fixed_axis
-    par1.axis["right"] = new_fixed_axis(loc="right", axes=par1,
-                                        offset=(offset, 0))
-
+    par1.axis["right"] = new_fixed_axis(loc="right", axes=par1, offset=(offset, 0))
     par1.axis["right"].toggle(all=True)
 
     host.set_xlim(1850, 2020)
@@ -142,7 +138,8 @@ def combine_anomaly_storms(args, args2):
 
     p1, = host.plot(years, nameStorm, label="Tropical Storms")
     p2, = par1.plot(years, anomalies, label="Anomalies (F)")
-
+    
+    # Introduces a second, right-hand sided y-axis to accomodate the difference in data points
     par1.set_ylim(-0.6, 0.8)
 
     host.legend()
