@@ -15,3 +15,20 @@ class DisplaySeaTemps:
     def __hash__(self):
         return hash((self.year, self.avg_anomaly, self.lower_confidence, self.upper_confidence))
 
+
+class Storm:
+
+    def __init__(self, year, storms, hurricanes, majors):
+        self.year = int(year)
+        self.storms = int(storms)
+        self.hurricanes = int(hurricanes)
+        self.majors = int(majors)
+
+    def __repr__(self):
+        return f'{self.year}, {self.storms}, {self.hurricanes}, {self.majors}'
+
+    def __str__(self):
+        return str(self.__repr__())
+
+    def __hash__(self):
+        return hash((self.year, self.storms, self.hurricanes, self.majors))

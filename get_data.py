@@ -66,6 +66,8 @@ class SeaTemps:
 
 class StormData:
 
+    
+
     def _get_data(self):
         #getting html
         URL = 'https://www.stormfax.com/huryear.htm'
