@@ -1,23 +1,39 @@
 import matplotlib.pyplot as plt
-import pandas as pd
-from get_data import*
+from get_data import StormData
+import mpl_toolkits.axisartist as AA
+from mpl_toolkits.axes_grid1 import host_subplot
 
 
 # Standard years/anomaly plot
-def plot_standard_data(args):
-    years = []
-    anomalies = []
+def plot_standard_anomalies(args):
+    years, anomalies = [], []
     for x in args:
         years.append(x.year)
         anomalies.append(x.avg_anomaly)
-    plt.plot(years, anomalies)
+    plt.plot(years, anomalies, color='green')
     plt.title('Sea Temperature Anomaly per Year')
     plt.xlabel('Year')
     plt.ylabel('Anomalies (F)')
-    plt.xticks(rotation=75)
     plt.tight_layout()
     plt.show()
-    plt.savefig('sst_standard')
+    plt.savefig('sst_standard_anomalies')
+
+
+# Standard confidence
+def plot_standard_confidence(args):
+    years, lower, upper = [], [], []
+    for x in args:
+        years.append(x.year)
+        lower.append(x.lower_confidence)
+        upper.append(x.upper_confidence)
+    plt.plot(years, upper, color='red')
+    plt.plot(years, lower, color='blue')
+    plt.title('Sea Temperature Confidence per Year')
+    plt.xlabel('Year')
+    plt.ylabel('Confidence (F)')
+    plt.tight_layout()
+    plt.show()
+    plt.savefig('sst_standard_confidence')
 
 
 # Plotting pandas anomaly data by decade
@@ -52,43 +68,89 @@ def merge_decade(args):
     plt.show()
     plt.savefig('sst_merge')
 
-class StormPlots:
 
-    stormDat = StormData()
-
-    def graphStorm(self):
-
-        plt.style.use('dark_background')
-        plt.plot(stormDat.yrs, stormDat.named, color='deeppink')
-        plt.title('Named Storms per Year', color='white')
-        plt.xlabel('Year', color='white')
-        plt.ylabel('Named Storms', color='white')
-        plt.xticks([0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110,
-                   120, 130, 140, 150, 158, 166], rotation=75, fontsize=7)
-        plt.yticks(fontsize=7)
-        plt.tight_layout()
-        plt.show()
-        plt.savefig('stormsperyear')
-
-    def graphHurricanes(self):
-
-        # plt.style.use('dark_background')
-        fig, axs = plt.subplots(2, 1)
-        axs[0].plot(stormDat.yrs, stormDat.maj, color='darkmagenta')
-        axs[0].set_xlabel('Year', color='white')
-        axs[0].set_xticks([0, 20, 40, 60, 80, 100, 120, 140, 152, 166])
-        axs[0].set_ylabel('Major Hurricanes', color='white')
-
-        axs[1].bar(stormDat.yrs, stormDat.hurr, color='green')
-        axs[1].set_xlabel('Year', color='white')
-        axs[1].set_xticks([0, 20, 40, 60, 80, 100, 120, 140, 152, 166])
-        axs[1].set_ylabel('Hurricanes', color='white')
-
-        # fig.title('Hurricanes per Year', color='white')
-        fig.tight_layout()
-        fig.show()
-        fig.savefig('hurricanes_majperyear')
+stormDat = StormData()
 
 
+def graphStorm(args):
+    year, nameStorm, hurricane, majhurricane = [], [], [], []
+    for x in args:
+        year.append(x.year)
+        nameStorm.append(x.storms)
+        hurricane.append(x.hurricanes)
 
+    plt.style.use('dark_background')
+    plt.plot(year, nameStorm, color='deeppink')
+    plt.title('Tropical Storms per Year', color='white')
+    plt.xlabel('Year', color='white')
+    plt.ylabel('Tropical Storms', color='white')
+    plt.yticks(fontsize=7)
+    plt.tight_layout()
+    plt.show()
+    plt.savefig('stormsperyear')
+
+
+def graph_severe_hurricanes(args):
+    year, hurricane, majhurricane = [], [], []
+    for x in args:
+        year.append(x.year)
+        majhurricane.append(x.majors)
+        hurricane.append(x.hurricanes)
+    plt.style.use('dark_background')
+    fig, axs = plt.subplots(2, 1)
+    axs[0].plot(year, majhurricane, color='darkmagenta')
+    axs[0].set_xlabel('Year', color='white')
+    axs[0].set_ylabel('Major Hurricanes', color='white')
+    axs[1].bar(year, hurricane, color='green')
+    axs[1].set_xlabel('Year', color='white')
+    axs[1].set_ylabel('Hurricanes', color='white')
+    # fig.title('Hurricanes per Year', color='white')
+    fig.tight_layout()
+    fig.show()
+    fig.savefig('hurricanes_majperyear')
+
+
+def combine_anomaly_storms(args, args2):
+    year, nameStorm, hurricane = [], [], []
+    for x in args:
+        year.append(x.year)
+        nameStorm.append(x.storms)
+        hurricane.append(x.hurricanes)
+    years, anomalies = [], []
+    for x in args2:
+        years.append(x.year)
+        anomalies.append(x.avg_anomaly)
+
+    host = host_subplot(111, axes_class=AA.Axes)
+    plt.subplots_adjust(right=0.75)
+
+    par1 = host.twinx()
+
+    offset = 0
+    new_fixed_axis = par1.get_grid_helper().new_fixed_axis
+    par1.axis["right"] = new_fixed_axis(loc="right", axes=par1,
+                                        offset=(offset, 0))
+
+    par1.axis["right"].toggle(all=True)
+
+    host.set_xlim(1850, 2020)
+    host.set_ylim(0, 30)
+
+    host.set_xlabel("Years")
+    host.set_ylabel("Tropical Storms")
+    par1.set_ylabel("Anomalies (F)")
+
+    p1, = host.plot(years, nameStorm, label="Tropical Storms")
+    p2, = par1.plot(years, anomalies, label="Anomalies (F)")
+
+    par1.set_ylim(-0.6, 0.8)
+
+    host.legend()
+
+    host.axis["left"].label.set_color(p1.get_color())
+    par1.axis["right"].label.set_color(p2.get_color())
+
+    plt.draw()
+    plt.show()
+    plt.savefig('Merged_Anomalies_TropStorms')
 
