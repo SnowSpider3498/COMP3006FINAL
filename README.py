@@ -7,9 +7,9 @@ Kristoffer Sorensen & Courtnay McClure
 <br /> <br />
 
 ## Datasets utilized
-Salary data scraped from 
+Hurricane data scraped from [StormFax](https://www.stormfax.com/huryear.htm)
 
-Points data scraped from #[ESPN](https://www.espn.com/nba/stats/team/_/season/2017/seasontype/2)
+Sea Temperatures pulled from [Met Office Hadley Centre](https://www.metoffice.gov.uk/hadobs/hadsst3/data/HadSST.3.1.1.0/diagnostics/HadSST.3.1.1.0_annual_nh_ts.txt)
 <br /> <br />
 
 ## Analysis Conclusion
@@ -18,7 +18,7 @@ Points data scraped from #[ESPN](https://www.espn.com/nba/stats/team/_/season/20
 
 ## Usage
 ```bash
-python nba_covid_analysis.py [command] [optional arguments]
+python3 ----.py [-h] [-o <outfile>] [-p] [-s <sort>] <command>
 ```
 ### Dependencies
 package dependencies listed in requirements.txt
