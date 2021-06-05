@@ -24,22 +24,20 @@ python3 ----.py [-h] [-o <outfile>] [-p] [-s <sort>] <command>
 package dependencies listed in requirements.txt
 
 ### [command]
+**print**: Displays all data
 
-# **data_eda**: explores salary and points data
+**by_decade**: Displays per decade data
 
-# **covid_analysis**: explores salary per points
+#****: explores salary per points
 
-# ### [optional arguments]
+### [optional arguments]
+-**anomaly**: simply will show anomaly sst data, can be saved in a csv by providing an outfile
+  
+-**confidence**: like the anomaly but shows the upper and lower confidence bounds, can be saved in a csv by providing an outfile
 
-# -**load_from_file**: loads jsons for salary and points data from folder. input will be requested from terminal
+-**p**: plots figures associated with command
 
-# -**p**: plots figures associated with command
-
-# -**csv** *folder name*: saves csvs associated with command to data/folder name
-
-# -**json** *folder name*: saves jsons accociated with command to data/folder name
-
-# -**p**: plots figures associated with command
+-**csv** *folder name*: saves csvs associated with command to data/folder name of user input
 
 # -**start_year** *year*: utilizes this year as beginning year to scrape webdata
 
