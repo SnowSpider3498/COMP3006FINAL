@@ -66,8 +66,12 @@ class SeaTemps:
 
 class StormData:
 
-    
+    def __init__(self):
+        self._get_data()
 
+    def __iter__(self):
+        return iter(self.dictData)
+        
     def _get_data(self):
         #getting html
         URL = 'https://www.stormfax.com/huryear.htm'
