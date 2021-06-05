@@ -1,8 +1,7 @@
 import argparse, sys
 import csv
-import matplotlib.pyplot as plt
 from get_data import SeaTemps
-from avg_per_decade import *
+from data_manipulation import *
 from plot_sst import *
 
 
@@ -18,16 +17,41 @@ def main():
 
     if args.command == 'print':
         head_row = [['Year', 'Annual Anomaly', 'Lower Confidence Interval', 'Upper Confidence Interval']]
-        for x in nh_sea_data:
-            row = [x.year, x.avg_anomaly, x.lower_confidence, x.upper_confidence]
-            head_row.append(row)
+        anomaly_row, confidence_row = [['Year', 'Annual Anomaly']], [['Year', 'Lower', 'Upper']]
+
+        if args.sort is None:
+            for x in nh_sea_data:
+                row = [x.year, x.avg_anomaly, x.lower_confidence, x.upper_confidence]
+                head_row.append(row)
+        if args.sort == 'anomaly':
+            for x in nh_sea_data:
+                row2 = [x.year, x.avg_anomaly]
+                anomaly_row.append(row2)
+        if args.sort == 'confidence':
+            for x in nh_sea_data:
+                row3 = [x.year, x.lower_confidence, x.upper_confidence]
+                confidence_row.append(row3)
+
         if args.ofile is None:
-            to_stdout = csv.writer(sys.stdout)
-            to_stdout.writerows(head_row)
+            if args.sort is None:
+                to_stdout = csv.writer(sys.stdout)
+                to_stdout.writerows(head_row)
+            if args.sort == 'anomaly':
+                to_stdout = csv.writer(sys.stdout)
+                to_stdout.writerows(anomaly_row)
+            if args.sort == 'confidence':
+                to_stdout = csv.writer(sys.stdout)
+                to_stdout.writerows(confidence_row)
+
         else:
             with open(args.ofile, 'w', newline='') as optimised_sst:
                 to_file = csv.writer(optimised_sst, quoting=csv.QUOTE_ALL)
-                to_file.writerows(head_row)
+                if args.sort is None:
+                    to_file.writerows(head_row)
+                if args.sort == 'anomaly':
+                    to_file.writerows(anomaly_row)
+                if args.sort == 'confidence':
+                    to_file.writerows(confidence_row)
 
         if args.plot is not None:
             plot_standard_data(nh_sea_data.sea_values)
@@ -58,8 +82,8 @@ def main():
                     data.to_csv(decade_information, header=False)
 
             if args.plot is not None:
+                data = average_per_decade(nh_sea_data.sea_values)
                 plot_decade_anomalies(data)
-
 
         # Sorts by confidence intervals from avg_per_decade
         elif args.sort == 'confidence':
@@ -85,4 +109,5 @@ if '__main__' == __name__:
     main()
 
 # Issue of running command then displaying the graph
+
 
