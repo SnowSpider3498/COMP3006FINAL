@@ -1,5 +1,5 @@
 # imports
-import requests, time
+import requests, time, logging, csv
 from bs4 import BeautifulSoup as BS
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -37,9 +37,10 @@ class StormData:
         fullRow = table.find_all('tr')
 
         #define attributes
-        headers = []
+        self.headers = []
         # self.data = []
         self.dictData = {}
+        self.csvStormDat = []
         # self.dictHurr = {}
         # self.dictMaj = {}
         # define algorithm for correct data pull
@@ -49,7 +50,7 @@ class StormData:
 
         # define headers
         for header in head[:4]:
-            headers.append(header.text)
+            self.headers.append(header.text)
 
         # define years, named storms, hurricanes, and major hurricanes        
         for idx, data in enumerate(fullRow):
@@ -69,8 +70,7 @@ class StormData:
                         majhurricane = dat[6:]
 
                         self.dictData[year]=(nameStorm, hurricane, majhurricane)
-                        # self.dictHurr[year]=hurricane
-                        # self.data.append(Storm(year, nameStorm, hurricane, majhurricane))
+                        self.csvStormDat.append((year, nameStorm, hurricane, majhurricane))
                     # double - single algorithm
                     elif idx in doubSing:
                         year = dat[:4]
@@ -79,7 +79,7 @@ class StormData:
                         majhurricane = dat[7:]
 
                         self.dictData[year] = (nameStorm, hurricane, majhurricane)
-                        # self.data.append(Storm(year, nameStorm, hurricane, majhurricane))
+                        self.csvStormDat.append((year, nameStorm, hurricane, majhurricane))
                     # double - double algorithm
                     elif idx in doubDoub:
                         year = dat[:4]
@@ -88,10 +88,10 @@ class StormData:
                         majhurricane = dat[8:]
 
                         self.dictData[year] = (nameStorm, hurricane, majhurricane)
-                        # self.data.append(Storm(year, nameStorm, hurricane, majhurricane))
+                        self.csvStormDat.append((year, nameStorm, hurricane, majhurricane))
 
         
-    def graphData(self):
+    def stormDataSet(self):
 
         self.yrs = self.dictData.keys()
         self.named = []
@@ -137,6 +137,18 @@ class StormData:
         fig.show()
         fig.savefig('hurricanes_majperyear')
 
+    def stormCSV(self):
+
+        stormcsv = "storm-data.csv"
+
+        with open(stormcsv, 'w') as output:
+            writer = csv.writer(output)
+
+            writer.writerow(self.headers)
+
+            for row in self.csvStormDat:
+                writer.writerow(row)
+
 
 # pretend main
 
@@ -146,11 +158,9 @@ def main():
 
     collectData._get_data()
 
-    collectData.graphData()
+    collectData.stormDataSet()
 
-    collectData.graphStorm()
-
-    collectData.graphHurricanes()
+    collectData.stormCSV()
 
 
 if __name__ == '__main__':
