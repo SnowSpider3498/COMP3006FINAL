@@ -70,10 +70,7 @@ def merge_decade(args):
     plt.savefig('sst_merge')
 
 
-<<<<<<< HEAD
-=======
 # Takes arguments given in main(), displays total tropical storms per year from 1851 to 2017
->>>>>>> 5e520b732c3f48c077457c0524b2c95377a1dc2c
 def graphStorm(args):
     year, nameStorm = [], []
     for x in args:
