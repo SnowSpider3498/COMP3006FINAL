@@ -11,7 +11,7 @@ def main():
 
     data_parser = argparse.ArgumentParser(description='Compiling Hurricane Initiation with Sea Temperatures')
     data_parser.add_argument('command', metavar='<command>',
-                             choices=['print', 'by_decade', 'storm', 'severe' 'merge_storms', 'merge_majors'], type=str,
+                             choices=['print', 'by_decade', 'merge_storms', 'merge_majors'], type=str,
                              help='command to execute')
     data_parser.add_argument('-o', '--ofile', metavar='<outfile>', dest='ofile', action='store')
     data_parser.add_argument('-p', '--plot', action='store_true', dest='plot')
