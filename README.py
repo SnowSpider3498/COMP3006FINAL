@@ -18,7 +18,7 @@ Sea Temperatures pulled from [Met Office Hadley Centre](https://www.metoffice.go
 
 ## Usage
 ```bash
-python3 ----.py [-h] [-o <outfile>] [-p] [-s <sort>] <command>
+python3 main.py [-h] [-o <outfile>] [-p] [-s <sort>] <command>
 ```
 ### Dependencies
 package dependencies listed in requirements.txt
@@ -28,11 +28,9 @@ package dependencies listed in requirements.txt
 
 **by_decade**: Displays per decade data
   
-**Storm**: Plots the total amount of Tropical Storms
+**merge_storms**: Plots the total amount of Tropical Storms along annual anomalies
   
-**Severe**: Plots the total amount of severe hurricanes (Category 3 to Category 5)
-  
-**merge_data**: Merges SST Anomaly Data with Tropical Storm data and plots both on the same graph
+**merge_majors**: Plots the total amount of severe hurricanes (Category 3 to Category 5) along annual anomalies
   
 ### [optional arguments]
 -**anomaly**: simply will show anomaly sst data, can be saved in a csv by providing an outfile
@@ -41,13 +39,11 @@ package dependencies listed in requirements.txt
   
 -**merge**: ONLY Plots merged data between sst Anomalies and Confidence Intervals
 
--**p**: plots figures associated with command
-
--**o** *folder name*: saves csvs associated with command to data/folder name of user input
+-**o** *folder name*: saves csvs associated with command to data/folder name of user input (encorperates plot command)
   
- -**s**: Sorts by two main options ('anomaly', 'confidence') and two command specifc options ('merge', 'tropical')
+ -**s**: Sorts by two main options ('anomaly', 'confidence') and two command specifc options ('merge', 'tropical' - both print command only)
   
--**tropical**: Displays the total tropical storms for a specific year (Command specific)
+ -**p**: Plots data for plotting capable sorts
   
 ### Code Instructions ###
 
@@ -58,8 +54,15 @@ Adding the following 'sort' features including 'anomaly', 'confidence', or 'trop
 (sorting by tropical will show ANNUAL HURRICANE DATA ONLY)
 
 To save a file to csv, apply the '-o' followed by a file name of user choice.
-This works for all commands/sort except for the strict command(s) of Storm, Severe and merge_data (These are plot only).
+This works for all commands/sort except for the strict command(s) of 'merge_majors' and 'merge_storms' (These are plot only).
 
-When saving a file to csv using '-o', a graph is created ONLY for the following commands:
-        python3 XXXXX
+When saving a file to csv using '-o', a graph is created for all commands except for the initial call of:
+        python3 main.py by_decade ---- This produces ONLY a standard out or requested csv but no plot (for data specific reasons)
+    
+To see hurricane data overlayed with sea temperature anomaly data, call either function of:
+        python3 main.py merge_storms ---- Looks at all tropical storms (NO CSV CAN BE SAVED)
+        python3 main.py merge_majors ---- Looks at ONLY major storms (NO CSV CAN BE SAVED)
+      
+CSV files are only allowed on specific files due to display orientation constraints
+        
 
