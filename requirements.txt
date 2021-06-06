@@ -9,5 +9,5 @@ collections - namedtuple
 unittest
 BeautifulSoup
 Numpy
-mpl_toolkits.axisartist
-mpl_toolkits.axes_grid1 - host_subplot
+mpl_toolkits.axisartist as AA
+from mpl_toolkits.axes_grid1 import host_subplot
