@@ -115,5 +115,3 @@ def main():
 
 if '__main__' == __name__:
     main()
-
-# Issue of running command then displaying the graph
