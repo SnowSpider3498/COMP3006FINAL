@@ -10,12 +10,13 @@ def main():
     nh_sea_data = SeaTemps()
     storm_data = StormData()
 
-    # We removed -p because a plot is automatically generated when saved to csv, explained more in README
+    # Argparser with given commands and functionalities
     data_parser = argparse.ArgumentParser(description='Compiling Hurricane Initiation with Sea Temperatures')
     data_parser.add_argument('command', metavar='<command>',
                              choices=['print', 'by_decade', 'merge_storms', 'merge_majors'], type=str,
                              help='command to execute')
     data_parser.add_argument('-o', '--ofile', metavar='<outfile>', dest='ofile', action='store')
+    data_parser.add_argument('-p', '--plot', action='store_true', dest='plot')
     data_parser.add_argument('-s', '--sort', metavar='<sort>', choices=['confidence', 'anomaly', 'merge', 'tropical'],
                              dest='sort')
     args = data_parser.parse_args()
