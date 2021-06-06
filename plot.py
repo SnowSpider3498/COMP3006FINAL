@@ -148,3 +148,47 @@ def combine_anomaly_storms(args, args2):
     plt.draw()
     plt.show()
     plt.savefig('Anomalies_TropicalStorms')
+
+
+def combine_anomaly_majors(args, args2):
+    year, majhurricane = [], []
+    for x in args:
+        year.append(x.year)
+        majhurricane.append(x.majors)
+    years, anomalies = [], []
+    for x in args2:
+        years.append(x.year)
+        anomalies.append(x.avg_anomaly)
+
+    host = host_subplot(111, axes_class=AA.Axes)
+    plt.subplots_adjust(right=0.75)
+
+    par1 = host.twinx()
+
+    offset = 0
+    new_fixed_axis = par1.get_grid_helper().new_fixed_axis
+    par1.axis["right"] = new_fixed_axis(
+        loc="right", axes=par1, offset=(offset, 0))
+
+    par1.axis["right"].toggle(all=True)
+
+    host.set_xlim(1850, 2020)
+    host.set_ylim(-1, 9)
+
+    host.set_xlabel("Years")
+    host.set_ylabel("Major Hurricanes")
+    par1.set_ylabel("Anomalies (F)")
+
+    p1, = host.plot(year, majhurricane, label="Major Hurricanes")
+    p2, = par1.plot(years, anomalies, label="Anomalies (F)")
+
+    par1.set_ylim(-0.6, 0.8)
+
+    host.legend()
+
+    host.axis["left"].label.set_color(p1.get_color())
+    par1.axis["right"].label.set_color(p2.get_color())
+
+    plt.draw()
+    plt.show()
+    plt.savefig('Anomalies_MajorHurricanes')
