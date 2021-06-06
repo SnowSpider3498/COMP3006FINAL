@@ -69,12 +69,13 @@ def merge_decade(args):
     plt.show()
     plt.savefig('sst_merge')
 
+
+# Takes arguments given in main(), displays total tropical storms per year from 1851 to 2017
 def graphStorm(args):
-    year, nameStorm, hurricane, majhurricane = [], [], [], []
+    year, nameStorm = [], []
     for x in args:
         year.append(x.year)
         nameStorm.append(x.storms)
-        hurricane.append(x.hurricanes)
 
     plt.style.use('dark_background')
     plt.plot(year, nameStorm, color='deeppink')
@@ -87,6 +88,7 @@ def graphStorm(args):
     plt.savefig('stormsperyear')
 
 
+# Takes arguments given in main(), displays total hurricanes and major hurricanes from 1851 to 2017
 def graph_severe_hurricanes(args):
     year, hurricane, majhurricane = [], [], []
     for x in args:
@@ -94,6 +96,7 @@ def graph_severe_hurricanes(args):
         majhurricane.append(x.majors)
         hurricane.append(x.hurricanes)
     plt.style.use('dark_background')
+    # Subplots used to display two graphs on one image
     fig, axs = plt.subplots(2, 1)
     axs[0].plot(year, majhurricane, color='darkmagenta')
     axs[0].set_xlabel('Year', color='white')
@@ -101,12 +104,13 @@ def graph_severe_hurricanes(args):
     axs[1].bar(year, hurricane, color='green')
     axs[1].set_xlabel('Year', color='white')
     axs[1].set_ylabel('Hurricanes', color='white')
-    # fig.title('Hurricanes per Year', color='white')
+    fig.title('Hurricanes per Year', color='white')
     fig.tight_layout()
     fig.show()
     fig.savefig('hurricanes_majperyear')
 
 
+# Takes arguments given in main(), combines anomalies and total tropical storms from 1851 to 2017
 def combine_anomaly_storms(args, args2):
     year, nameStorm = [], []
     for x in args:
@@ -117,9 +121,11 @@ def combine_anomaly_storms(args, args2):
         years.append(x.year)
         anomalies.append(x.avg_anomaly)
 
+    # In order to plot two data values on one graph, we have to make use of matplotlib's toolkit
     host = host_subplot(111, axes_class=AA.Axes)
     plt.subplots_adjust(right=0.75)
 
+    # par1 will be referencing axis for anomalies
     par1 = host.twinx()
 
     offset = 0
@@ -128,7 +134,10 @@ def combine_anomaly_storms(args, args2):
 
     par1.axis["right"].toggle(all=True)
 
+    # Since the x is the same for both graphs, only one x is needed
     host.set_xlim(1850, 2020)
+
+    # y-axis values for hurricanes
     host.set_ylim(0, 30)
 
     host.set_xlabel("Years")
@@ -138,6 +147,7 @@ def combine_anomaly_storms(args, args2):
     p1, = host.plot(year, nameStorm, label="Tropical Storms")
     p2, = par1.plot(years, anomalies, label="Anomalies (F)")
 
+    # x-axis values for anomalies
     par1.set_ylim(-0.6, 0.8)
 
     host.legend()
@@ -150,6 +160,7 @@ def combine_anomaly_storms(args, args2):
     plt.savefig('Anomalies_TropicalStorms')
 
 
+# Displays sea temperature anomalies and major hurricanes from 1851 to 2017
 def combine_anomaly_majors(args, args2):
     year, majhurricane = [], []
     for x in args:
