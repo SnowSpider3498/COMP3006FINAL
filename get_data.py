@@ -19,7 +19,7 @@ class SeaTemps:
     annual_nh_sea_temps = requests.get(
         'https://www.metoffice.gov.uk/hadobs/hadsst3/data/HadSST.3.1.1.0/diagnostics/HadSST.3.1.1.0_annual_nh_ts.txt')
     saved_nh_sst = 'nh_sst.txt'
-    
+
     # Main list that holds our object declared in the refactoring process
     sea_values = []
 
@@ -51,7 +51,7 @@ class SeaTemps:
                     avg_temp = np.array(data.Avg_Temp)
                     lower_confidence = np.array(data.Lower_B_S_C)
                     upper_confidence = np.array(data.Upper_B_S_C)
-                    
+
                     # Returns a value that has specific types after being passed through refactor_data
                     self.sea_values.append(DisplaySeaTemps(year, avg_temp, lower_confidence, upper_confidence))
         else:
@@ -80,7 +80,7 @@ class StormData:
     URL = 'https://www.stormfax.com/huryear.htm'
     stat_code = requests.get(URL)
     page = requests.get(URL).text
-    
+
     # Just like the above class, this holds the objects from refactor_data
     hurricane_values = []
 
@@ -162,7 +162,7 @@ class StormData:
 
     def stormDataSet(self):
         logging.debug('reformat-hurricane-data')
-        
+
         # Appends values from refactor_data into the class list above
         for i in self.csvStormDat:
             self.hurricane_values.append(Storm(i[0], i[1], i[2], i[3]))
