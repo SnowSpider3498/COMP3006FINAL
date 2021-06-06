@@ -7,17 +7,24 @@ from plot import *
 
 def main():
     nh_sea_data = SeaTemps()
+    storm_data = StormData()
+
     data_parser = argparse.ArgumentParser(description='Compiling Hurricane Initiation with Sea Temperatures')
-    data_parser.add_argument('command', metavar='<command>', choices=['print', 'by_decade', 'storm', 'merge_storms'], type=str,
+    data_parser.add_argument('command', metavar='<command>', choices=['print', 'by_decade', 'storm', 'severe' 'merge_storms', 'merge_majors'], type=str,
                              help='command to execute')
     data_parser.add_argument('-o', '--ofile', metavar='<outfile>', dest='ofile', action='store')
     data_parser.add_argument('-p', '--plot', action='store_true', dest='plot')
-    data_parser.add_argument('-s', '--sort', metavar='<sort>', choices=['confidence', 'anomaly', 'merge'], dest='sort')
+    data_parser.add_argument('-s', '--sort', metavar='<sort>', choices=['confidence', 'anomaly', 'merge', 'tropical'], dest='sort')
     args = data_parser.parse_args()
 
     if args.command == 'print':
-        head_row = [['Year', 'Annual Anomaly', 'Lower Confidence Interval', 'Upper Confidence Interval']]
-        anomaly_row, confidence_row = [['Year', 'Annual Anomaly']], [['Year', 'Lower', 'Upper']]
+
+        if args.sort == 'tropical':
+            head_row = [['Year', 'Named Storms', 'Hurricanes', 'Major Hurricanes']]
+            tropical_row = [['Year', 'Named Storms', 'Hurricanes', 'Major Hurricanes']]
+        else:
+            head_row = [['Year', 'Annual Anomaly', 'Lower Confidence Interval', 'Upper Confidence Interval']]
+            anomaly_row, confidence_row = [['Year', 'Annual Anomaly']], [['Year', 'Lower', 'Upper']]
 
         if args.sort is None:
             for x in nh_sea_data:
@@ -31,6 +38,10 @@ def main():
             for x in nh_sea_data:
                 row3 = [x.year, x.lower_confidence, x.upper_confidence]
                 confidence_row.append(row3)
+        if args.sort == 'tropical':
+            for x in storm_data:
+                row4 = [x.year, x.storms, x.hurricanes, x.majors]
+                tropical_row.append(row4)
 
         if args.ofile is None:
             if args.sort is None:
@@ -106,10 +117,15 @@ def main():
                 merge_decade(merged)
 
     if args.command == 'storm':
-        # graphStorm(StormData.hurricane_values)
+        graphStorm(StormData.hurricane_values)
+
+    if args.command == 'severe':
         graph_severe_hurricanes(StormData.hurricane_values)
 
     if args.command == 'merge_storms':
+        combine_anomaly_storms(StormData.hurricane_values, SeaTemps.sea_values)
+    
+    if args.command == 'merge_majors':
         combine_anomaly_majors(StormData.hurricane_values, SeaTemps.sea_values)
 
 
