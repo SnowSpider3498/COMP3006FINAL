@@ -2,6 +2,7 @@ import csv, os.path, logging, requests
 from collections import namedtuple
 from refactor_data import DisplaySeaTemps, Storm
 from bs4 import BeautifulSoup as BS
+import numpy as np
 
 # root logger
 logger = logging.getLogger()
@@ -18,8 +19,6 @@ class SeaTemps:
         'https://www.metoffice.gov.uk/hadobs/hadsst3/data/HadSST.3.1.1.0/diagnostics/HadSST.3.1.1.0_annual_nh_ts.txt')
     saved_nh_sst = 'nh_sst.txt'
     sea_values = []
-
-    logging.debug('response code from url: 200')
 
     def __init__(self):
         self._refactor_data_to_csv()
@@ -42,10 +41,12 @@ class SeaTemps:
                 reader = csv.reader(sst_file.readlines()[1:-4], delimiter=' ', skipinitialspace=True)
                 for x in reader:
                     data = Temperatures(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8], x[9], x[10], x[11])
-                    year = data.Year
-                    avg_temp = data.Avg_Temp
-                    lower_confidence = data.Lower_B_S_C
-                    upper_confidence = data.Upper_B_S_C
+
+                    # Numpy may seem a bit redundant here but since they are arrays now, popping data can be easily done
+                    year = np.array(data.Year)
+                    avg_temp = np.array(data.Avg_Temp)
+                    lower_confidence = np.array(data.Lower_B_S_C)
+                    upper_confidence = np.array(data.Upper_B_S_C)
 
                     self.sea_values.append(DisplaySeaTemps(year, avg_temp, lower_confidence, upper_confidence))
         else:
@@ -53,7 +54,7 @@ class SeaTemps:
 
     def _get_data(self):
         if self.annual_nh_sea_temps.status_code:
-            logging.debug(self.annual_nh_sea_temps.status_code)
+            logging.debug('response code from url: 200')
             with open(self.saved_nh_sst, 'w') as nh_sst:
                 for line in self.annual_nh_sea_temps:
                     # Data is read in bytes, so here I decode that and convert it into strings
@@ -64,24 +65,28 @@ class SeaTemps:
         else:
             logging.debug(self.annual_nh_sea_temps.status_code)
 
+
 ##############################################################################################
 
 
 class StormData:
+    URL = 'https://www.stormfax.com/huryear.htm'
+    stat_code = requests.get(URL)
+    page = requests.get(URL).text
     hurricane_values = []
 
     def __init__(self):
         self._get_data()
         self.stormDataSet()
+        response = StormData.stat_code.status_code
 
     def __iter__(self):
-        return iter(self.dictData)
+        return iter(self.hurricane_values)
 
     def _get_data(self):
         # getting html
-        URL = 'https://www.stormfax.com/huryear.htm'
-        page = requests.get(URL).text
-        soup = BS(page, 'html.parser')
+
+        soup = BS(self.page, 'html.parser')
 
         logging.debug('response code from url: 200')
 
@@ -92,29 +97,28 @@ class StormData:
         # define rows
         fullRow = table.find_all('tr')
 
-        # define algorithm for correct data pull
-        singles = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 28, 30, 31,
-                   32, 33, 34, 37, 38, 39, 41, 43, 44, 45, 46, 49, 51, 53, 54, 56, 59, 60, 61, 62, 63, 64, 66,
-                   67, 68, 69, 70, 71, 72, 74, 76, 77, 78, 79, 84, 87, 88, 89, 90, 95, 96, 97, 101, 105, 106, 109, 111,
-                   112, 114, 116, 117, 121, 122, 124, 126, 128, 131, 132, 135, 136, 140, 141, 142, 143, 146, 158, 163]
-        doubSing = [18, 29, 40, 47, 48, 50, 52, 55, 57, 58, 73, 75, 80, 81, 83, 85, 86, 91, 92, 93, 94, 98, 100, 102,
-                    103, 104, 107, 108, 110, 113,
-                    115, 119, 120, 123, 125, 127, 129, 130, 133, 134, 137, 138, 139, 145, 148, 149, 150, 151, 152, 153,
-                    155, 156, 157, 160, 162, 164, 165]
-        doubDoub = [19, 27, 35, 36, 42, 65, 82,
-                    99, 118, 144, 147, 154, 159, 161, 166]
+        # define algorithm for correct data pull, Numpy is here to organize the data from standard lists to arrays
+        singles = np.array(
+            [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24, 25, 26, 28, 30, 31,
+             32, 33, 34, 37, 38, 39, 41, 43, 44, 45, 46, 49, 51, 53, 54, 56, 59, 60, 61, 62, 63, 64, 66,
+             67, 68, 69, 70, 71, 72, 74, 76, 77, 78, 79, 84, 87, 88, 89, 90, 95, 96, 97, 101, 105, 106, 109, 111,
+             112, 114, 116, 117, 121, 122, 124, 126, 128, 131, 132, 135, 136, 140, 141, 142, 143, 146, 158, 163])
+        doubSing = np.array(
+            [18, 29, 40, 47, 48, 50, 52, 55, 57, 58, 73, 75, 80, 81, 83, 85, 86, 91, 92, 93, 94, 98, 100, 102,
+             103, 104, 107, 108, 110, 113,
+             115, 119, 120, 123, 125, 127, 129, 130, 133, 134, 137, 138, 139, 145, 148, 149, 150, 151, 152, 153,
+             155, 156, 157, 160, 162, 164, 165])
+        doubDoub = np.array([19, 27, 35, 36, 42, 65, 82, 99, 118, 144, 147, 154, 159, 161, 166])
 
         # define attributes
         self.headers = []
         self.csvStormDat = []
-        self.dictData = {}
-
 
         # define headers
         for header in head[:4]:
             self.headers.append(header.text)
 
-        logging.debug('grab-table-data-hurricanes')
+        logging.debug('grab-table-data-hurricanes.txt')
         # define years, named storms, hurricanes, and major hurricanes
         for idx, data in enumerate(fullRow):
             if idx == 1:
@@ -131,8 +135,6 @@ class StormData:
                         nameStorm = dat[4]
                         hurricane = dat[5]
                         majhurricane = dat[6:]
-
-                        self.dictData[year] = (nameStorm, hurricane, majhurricane)
                         self.csvStormDat.append((year, nameStorm, hurricane, majhurricane))
                     # double single algorithm
                     elif idx in doubSing:
@@ -140,8 +142,6 @@ class StormData:
                         nameStorm = dat[4:6]
                         hurricane = dat[6]
                         majhurricane = dat[7:]
-
-                        self.dictData[year] = (nameStorm, hurricane, majhurricane)
                         self.csvStormDat.append((year, nameStorm, hurricane, majhurricane))
                     # double double algorithm
                     elif idx in doubDoub:
@@ -149,8 +149,6 @@ class StormData:
                         nameStorm = dat[4:6]
                         hurricane = dat[6:8]
                         majhurricane = dat[8:]
-
-                        self.dictData[year] = (nameStorm, hurricane, majhurricane)
                         self.csvStormDat.append((year, nameStorm, hurricane, majhurricane))
 
     def stormDataSet(self):
@@ -173,4 +171,3 @@ class StormData:
 
             for row in self.csvStormDat:
                 writer.writerow(row)
-
