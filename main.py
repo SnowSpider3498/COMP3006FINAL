@@ -1,6 +1,6 @@
 import argparse, sys
 import csv
-from get_data import SeaTemps
+from get_data import SeaTemps, StormData
 from data_manipulation import *
 from plot import *
 
@@ -20,9 +20,10 @@ def main():
     args = data_parser.parse_args()
 
     if args.command == 'print':
-        tropical_row = [['Year', 'Named Storms', 'Hurricanes', 'Major Hurricanes']]
+        
         head_row = [['Year', 'Annual Anomaly', 'Lower Confidence Interval', 'Upper Confidence Interval']]
         anomaly_row, confidence_row = [['Year', 'Annual Anomaly']], [['Year', 'Lower', 'Upper']]
+        tropical_row = [['Year', 'Named Storms', 'Hurricanes', 'Major Hurricanes']]
 
         if args.sort is None:
             for x in nh_sea_data:
@@ -51,6 +52,9 @@ def main():
             if args.sort == 'confidence':
                 to_stdout = csv.writer(sys.stdout)
                 to_stdout.writerows(confidence_row)
+            if args.sort == 'tropical':
+                to_stdout = csv.writer(sys.stdout)
+                to_stdout.writerows(tropical_row)
 
         else:
             with open(args.ofile, 'w', newline='') as optimised_sst:
@@ -65,6 +69,12 @@ def main():
                     to_file.writerows(confidence_row)
                     if args.plot is not None:
                         plot_standard_confidence(nh_sea_data.sea_values)
+                if args.sort == 'tropical':
+                    to_file.writerows(tropical_row)
+                    storm_data.stormCSV()
+                    if args.plot is not None:
+                        graphStorm(storm_data.hurricane_values)
+                        graph_severe_hurricanes(storm_data.hurricane_values)
 
     if args.command == 'by_decade':
         if args.sort is None:
@@ -114,17 +124,17 @@ def main():
                 merged = merge(nh_sea_data.sea_values)
                 merge_decade(merged)
 
-    if args.command == 'storm':
-        graphStorm(StormData.hurricane_values)
+    # if args.command == 'storm':
+    #     graphStorm(StormData.hurricane_values)
 
-    if args.command == 'severe':
-        graph_severe_hurricanes(StormData.hurricane_values)
+    # if args.command == 'severe':
+    #     graph_severe_hurricanes(StormData.hurricane_values)
 
     if args.command == 'merge_storms':
         combine_anomaly_storms(StormData.hurricane_values, SeaTemps.sea_values)
 
-    # if args.command == 'merge_majors':
-    #     combine_anomaly_majors(StormData.hurricane_values, SeaTemps.sea_values)
+    if args.command == 'merge_majors':
+        combine_anomaly_majors(StormData.hurricane_values, SeaTemps.sea_values)
 
 
 if '__main__' == __name__:

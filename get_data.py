@@ -158,6 +158,7 @@ class StormData:
         for i in self.csvStormDat:
             self.hurricane_values.append(Storm(i[0], i[1], i[2], i[3]))
 
+
     def stormCSV(self):
 
         stormcsv = "storm-data.csv"
