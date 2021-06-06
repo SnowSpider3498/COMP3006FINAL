@@ -1,4 +1,3 @@
-from refactor_data import Storm
 import matplotlib.pyplot as plt
 from get_data import StormData
 import mpl_toolkits.axisartist as AA
@@ -60,7 +59,7 @@ def plot_decade_confidence(args):
     plt.savefig('sst_up_low_confidence')
 
 
-# Merging both anomalies and confidence data
+# Merging the two sets of data
 def merge_decade(args):
     args.plot()
     plt.title('Sea Temperature Confidence and Anomalies per Decade')
@@ -70,13 +69,13 @@ def merge_decade(args):
     plt.show()
     plt.savefig('sst_merge')
 
-# Graphs annual tropical storm values from 1851 to 2017
 def graphStorm(args):
     year, nameStorm, hurricane, majhurricane = [], [], [], []
     for x in args:
         year.append(x.year)
         nameStorm.append(x.storms)
         hurricane.append(x.hurricanes)
+
     plt.style.use('dark_background')
     plt.plot(year, nameStorm, color='deeppink')
     plt.title('Tropical Storms per Year', color='white')
@@ -88,7 +87,6 @@ def graphStorm(args):
     plt.savefig('stormsperyear')
 
 
-# Graphs major hurricane values from 1851 to 2017
 def graph_severe_hurricanes(args):
     year, hurricane, majhurricane = [], [], []
     for x in args:
@@ -109,13 +107,11 @@ def graph_severe_hurricanes(args):
     fig.savefig('hurricanes_majperyear')
 
 
-# Graphs the combined anomalies of sst and total tropical storms between 1851 and 2017    
 def combine_anomaly_storms(args, args2):
-    year, nameStorm, hurricane = [], [], []
+    year, nameStorm = [], []
     for x in args:
         year.append(x.year)
         nameStorm.append(x.storms)
-        hurricane.append(x.hurricanes)
     years, anomalies = [], []
     for x in args2:
         years.append(x.year)
@@ -129,65 +125,21 @@ def combine_anomaly_storms(args, args2):
     offset = 0
     new_fixed_axis = par1.get_grid_helper().new_fixed_axis
     par1.axis["right"] = new_fixed_axis(loc="right", axes=par1, offset=(offset, 0))
+
     par1.axis["right"].toggle(all=True)
 
     host.set_xlim(1850, 2020)
     host.set_ylim(0, 30)
-    # Introduces a second, right-hand sided y-axis to accomodate the difference in data points
-    par1.set_ylim(-0.6, 0.8)
 
     host.set_xlabel("Years")
     host.set_ylabel("Tropical Storms")
     par1.set_ylabel("Anomalies (F)")
 
-    p1, = host.plot(years, nameStorm, label="Tropical Storms")
+    p1, = host.plot(year, nameStorm, label="Tropical Storms")
     p2, = par1.plot(years, anomalies, label="Anomalies (F)")
-    
-    host.legend()
 
-    host.axis["left"].label.set_color(p1.get_color())
-    par1.axis["right"].label.set_color(p2.get_color())
-
-    plt.draw()
-    plt.show()
-    plt.savefig('Merged_Anomalies_TropStorms')
-
-# Graphs the combined anomalies of sst and total tropical storms between 1851 and 2017
-
-
-def combine_anomaly_majors(args, args2):
-    year, majhurricane = [], []
-    for x in args:
-        year.append(x.year)
-        majhurricane.append(x.majors)
-    years, anomalies = [], []
-    for x in args2:
-        years.append(x.year)
-        anomalies.append(x.avg_anomaly)
-
-    host = host_subplot(111, axes_class=AA.Axes)
-    plt.subplots_adjust(right=0.75)
-
-    par1 = host.twinx()
-
-    offset = 0
-    new_fixed_axis = par1.get_grid_helper().new_fixed_axis
-    par1.axis["right"] = new_fixed_axis(
-        loc="right", axes=par1, offset=(offset, 0))
-    par1.axis["right"].toggle(all=True)
-
-    host.set_xlim(1850, 2020)
-    host.set_ylim(-1, 9)
-    # Introduces a second, right-hand sided y-axis to accomodate the difference in data points
     par1.set_ylim(-0.6, 0.8)
 
-    host.set_xlabel("Years")
-    host.set_ylabel("Major Hurricanes")
-    par1.set_ylabel("Anomalies (F)")
-
-    p1, = host.plot(years, majhurricane, label="Major Hurricanes")
-    p2, = par1.plot(years, anomalies, label="Anomalies (F)")
-
     host.legend()
 
     host.axis["left"].label.set_color(p1.get_color())
@@ -195,4 +147,4 @@ def combine_anomaly_majors(args, args2):
 
     plt.draw()
     plt.show()
-    plt.savefig('Merged_Anomalies_MajHurricanes')
+    plt.savefig('Anomalies_TropicalStorms')
