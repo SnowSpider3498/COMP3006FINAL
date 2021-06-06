@@ -96,6 +96,7 @@ def graph_severe_hurricanes(args):
         majhurricane.append(x.majors)
         hurricane.append(x.hurricanes)
     plt.style.use('dark_background')
+    plt.title('Hurricanes/Major Hurricanes per Year', color='white')
     # Subplots used to display two graphs on one image
     fig, axs = plt.subplots(2, 1)
     axs[0].plot(year, majhurricane, color='darkmagenta')
@@ -104,7 +105,6 @@ def graph_severe_hurricanes(args):
     axs[1].bar(year, hurricane, color='green')
     axs[1].set_xlabel('Year', color='white')
     axs[1].set_ylabel('Hurricanes', color='white')
-    fig.title('Hurricanes per Year', color='white')
     fig.tight_layout()
     fig.show()
     fig.savefig('hurricanes_majperyear')
@@ -123,6 +123,7 @@ def combine_anomaly_storms(args, args2):
 
     # In order to plot two data values on one graph, we have to make use of matplotlib's toolkit
     host = host_subplot(111, axes_class=AA.Axes)
+    plt.title('Hurricanes and Anomalies per Year')
     plt.subplots_adjust(right=0.75)
 
     # par1 will be referencing axis for anomalies
