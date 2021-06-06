@@ -1,4 +1,4 @@
-matplotlib
+matplotlib - 
 pandas
 argparse
 sys
@@ -8,4 +8,6 @@ requests
 collections - namedtuple
 unittest
 BeautifulSoup
-logging
+Numpy
+mpl_toolkits.axisartist
+mpl_toolkits.axes_grid1 - host_subplot
