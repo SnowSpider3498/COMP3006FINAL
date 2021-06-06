@@ -27,23 +27,23 @@ package dependencies listed in requirements.txt
 **print**: Displays all data
 
 **by_decade**: Displays per decade data
-
-**Storm**: explores salary per points
   
-**Storm**: explores salary per points
-
+**Storm**: Plots the total amount of Tropical Storms
+  
+**Severe**: Plots the total amount of severe hurricanes (Category 3 to Category 5)
+  
+**merge_data**: Merges SST Anomaly Data with Tropical Storm data and plots both on the same graph
+  
 ### [optional arguments]
 -**anomaly**: simply will show anomaly sst data, can be saved in a csv by providing an outfile
   
 -**confidence**: like the anomaly but shows the upper and lower confidence bounds, can be saved in a csv by providing an outfile
+  
+-**merge**: ONLY Plots merged data between sst Anomalies and Confidence Intervals
 
 -**p**: plots figures associated with command
 
 -**csv** *folder name*: saves csvs associated with command to data/folder name of user input
-
-# -**start_year** *year*: utilizes this year as beginning year to scrape webdata
-
-# -**end_year** *year*: utilized this year as end year to scrape webdata
-
-# -**flask_app**: runs local flask application to display plots 
-
+  
+-**tropical**: Displays the total tropical storms for a specific year
+  
