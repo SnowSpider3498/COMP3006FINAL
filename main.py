@@ -110,7 +110,7 @@ def main():
         graph_severe_hurricanes(StormData.hurricane_values)
 
     if args.command == 'merge_storms':
-        combine_anomaly_storms(StormData.hurricane_values, SeaTemps.sea_values)
+        combine_anomaly_majors(StormData.hurricane_values, SeaTemps.sea_values)
 
 
 if '__main__' == __name__:
