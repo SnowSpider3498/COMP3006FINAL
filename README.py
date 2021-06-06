@@ -43,6 +43,8 @@ package dependencies listed in requirements.txt
   
  -**s**: Sorts by two main options ('anomaly', 'confidence') and two command specifc options ('merge', 'tropical' - both print command only)
   
+ -**p**: Plots data for plotting capable sorts
+  
 ### Code Instructions ###
 
 For standard sea temperature results, displayed in the order: (year, yearly anomaly, lower confidence bound, upper confidence bound), simply call print.
