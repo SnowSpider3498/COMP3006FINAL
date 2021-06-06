@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 
 # Averaging temp anomalies and intervals per decade
@@ -13,6 +14,7 @@ def average_per_decade(args):
     decade = df.groupby((df.index // 10) * 10)
     avg_decade_anomaly = round((decade.mean()), 4)
 
+    # Returns the values averaged per decade
     return avg_decade_anomaly
 
 
@@ -27,6 +29,7 @@ def avg_lower_upper_decade(args):
     decade = df.groupby((df.index // 10) * 10)
     avg_decade_confidence = round((decade.mean()), 4)
 
+    # Returns the confidences averaged per decade
     return avg_decade_confidence
 
 
@@ -42,6 +45,5 @@ def merge(args):
     decade = df.groupby((df.index // 10) * 10)
     merge_values = round((decade.mean()), 4)
 
+    # Returns the merged values averaged per decade
     return merge_values
-
-
