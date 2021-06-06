@@ -39,7 +39,7 @@ class SeaTemps:
                                       ' Upper_Coverage Lower_Bias_Sampling Upper_Bias_Sampling Lower_B_S_C Upper_B_S_C')
             with open(self.saved_nh_sst, 'r') as sst_file:
                 # We don't want to look at data beyond 2018
-                reader = csv.reader(sst_file.readlines()[:-3], delimiter=' ', skipinitialspace=True)
+                reader = csv.reader(sst_file.readlines()[1:-4], delimiter=' ', skipinitialspace=True)
                 for x in reader:
                     data = Temperatures(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8], x[9], x[10], x[11])
                     year = data.Year
