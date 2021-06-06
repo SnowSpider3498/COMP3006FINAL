@@ -15,9 +15,12 @@ logger.addHandler(fh)
 
 
 class SeaTemps:
+    # Accesses URL and requests status code
     annual_nh_sea_temps = requests.get(
         'https://www.metoffice.gov.uk/hadobs/hadsst3/data/HadSST.3.1.1.0/diagnostics/HadSST.3.1.1.0_annual_nh_ts.txt')
     saved_nh_sst = 'nh_sst.txt'
+    
+    # Main list that holds our object declared in the refactoring process
     sea_values = []
 
     def __init__(self):
@@ -25,6 +28,7 @@ class SeaTemps:
         self.response = SeaTemps.annual_nh_sea_temps.status_code
 
     def __iter__(self):
+        # Iterates through self
         return iter(self.sea_values)
 
     # Acts similar to AutoMPG data collection but is much more simplified
@@ -37,7 +41,7 @@ class SeaTemps:
                                       'Year Avg_Temp Lower_Bias Upper_Bias Lower_Sampling Upper_Sampling Lower_Coverage'
                                       ' Upper_Coverage Lower_Bias_Sampling Upper_Bias_Sampling Lower_B_S_C Upper_B_S_C')
             with open(self.saved_nh_sst, 'r') as sst_file:
-                # We don't want to look at data beyond 2018
+                # We don't want to look at data beyond 2017
                 reader = csv.reader(sst_file.readlines()[1:-4], delimiter=' ', skipinitialspace=True)
                 for x in reader:
                     data = Temperatures(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8], x[9], x[10], x[11])
@@ -47,12 +51,14 @@ class SeaTemps:
                     avg_temp = np.array(data.Avg_Temp)
                     lower_confidence = np.array(data.Lower_B_S_C)
                     upper_confidence = np.array(data.Upper_B_S_C)
-
+                    
+                    # Returns a value that has specific types after being passed through refactor_data
                     self.sea_values.append(DisplaySeaTemps(year, avg_temp, lower_confidence, upper_confidence))
         else:
             self._get_data()
 
     def _get_data(self):
+        # Gets data from website and writes to text file
         if self.annual_nh_sea_temps.status_code:
             logging.debug('response code from url: 200')
             with open(self.saved_nh_sst, 'w') as nh_sst:
@@ -70,9 +76,12 @@ class SeaTemps:
 
 
 class StormData:
+    # Accesses URL and requests status code
     URL = 'https://www.stormfax.com/huryear.htm'
     stat_code = requests.get(URL)
     page = requests.get(URL).text
+    
+    # Just like the above class, this holds the objects from refactor_data
     hurricane_values = []
 
     def __init__(self):
@@ -152,23 +161,19 @@ class StormData:
                         self.csvStormDat.append((year, nameStorm, hurricane, majhurricane))
 
     def stormDataSet(self):
-
         logging.debug('reformat-hurricane-data')
-
+        
+        # Appends values from refactor_data into the class list above
         for i in self.csvStormDat:
             self.hurricane_values.append(Storm(i[0], i[1], i[2], i[3]))
 
-
     def stormCSV(self):
-
         stormcsv = "storm-data.csv"
         logging.debug('storm-csv created')
 
         # write storm csv
         with open(stormcsv, 'w') as output:
             writer = csv.writer(output)
-
             writer.writerow(self.headers)
-
             for row in self.csvStormDat:
                 writer.writerow(row)
