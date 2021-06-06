@@ -10,21 +10,19 @@ def main():
     storm_data = StormData()
 
     data_parser = argparse.ArgumentParser(description='Compiling Hurricane Initiation with Sea Temperatures')
-    data_parser.add_argument('command', metavar='<command>', choices=['print', 'by_decade', 'storm', 'severe' 'merge_storms', 'merge_majors'], type=str,
+    data_parser.add_argument('command', metavar='<command>',
+                             choices=['print', 'by_decade', 'storm', 'severe' 'merge_storms', 'merge_majors'], type=str,
                              help='command to execute')
     data_parser.add_argument('-o', '--ofile', metavar='<outfile>', dest='ofile', action='store')
     data_parser.add_argument('-p', '--plot', action='store_true', dest='plot')
-    data_parser.add_argument('-s', '--sort', metavar='<sort>', choices=['confidence', 'anomaly', 'merge', 'tropical'], dest='sort')
+    data_parser.add_argument('-s', '--sort', metavar='<sort>', choices=['confidence', 'anomaly', 'merge', 'tropical'],
+                             dest='sort')
     args = data_parser.parse_args()
 
     if args.command == 'print':
-
-        if args.sort == 'tropical':
-            head_row = [['Year', 'Named Storms', 'Hurricanes', 'Major Hurricanes']]
-            tropical_row = [['Year', 'Named Storms', 'Hurricanes', 'Major Hurricanes']]
-        else:
-            head_row = [['Year', 'Annual Anomaly', 'Lower Confidence Interval', 'Upper Confidence Interval']]
-            anomaly_row, confidence_row = [['Year', 'Annual Anomaly']], [['Year', 'Lower', 'Upper']]
+        tropical_row = [['Year', 'Named Storms', 'Hurricanes', 'Major Hurricanes']]
+        head_row = [['Year', 'Annual Anomaly', 'Lower Confidence Interval', 'Upper Confidence Interval']]
+        anomaly_row, confidence_row = [['Year', 'Annual Anomaly']], [['Year', 'Lower', 'Upper']]
 
         if args.sort is None:
             for x in nh_sea_data:
@@ -124,9 +122,9 @@ def main():
 
     if args.command == 'merge_storms':
         combine_anomaly_storms(StormData.hurricane_values, SeaTemps.sea_values)
-    
-    if args.command == 'merge_majors':
-        combine_anomaly_majors(StormData.hurricane_values, SeaTemps.sea_values)
+
+    # if args.command == 'merge_majors':
+    #     combine_anomaly_majors(StormData.hurricane_values, SeaTemps.sea_values)
 
 
 if '__main__' == __name__:
