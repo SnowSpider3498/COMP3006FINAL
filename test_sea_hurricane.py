@@ -15,33 +15,26 @@ class TestSeaTemps(unittest.TestCase):
         # make sure the website returns a status code
         self.assertTrue(get_data.SeaTemps().response == 200)
 
+
+# Tests if the values are refactored properly
+class TestRefactor_Data(unittest.TestCase):
+    def test_type_conversion(self):
+        test1 = DisplaySeaTemps(1945, 0.47, 0.23, 0.65)
+        self.assertEqual(1945, test1.year)
+        self.assertEqual(0.47, test1.avg_anomaly)
+        self.assertEqual(0.23, test1.lower_confidence)
+        self.assertEqual(0.65, test1.upper_confidence)
+
 class TestStormData(unittest.TestCase):
     def test_iterable(self):
         iter(get_data.StormData())
 
     def test_get_data(self):
-        self.assertTrue(get_data.StormData()._get_data().response == 200)
+        self.assertTrue(StormData().response == 200)
     
     def test_stormCSV(self):
         get_data.StormData().stormCSV()
         self.assertTrue(os.path.exists('storm-data.csv'))
-
-class TestDataManipulation(unittest.TestCase):
-    def test_average_per_decade(self):
-        pass
-
-    def test_avg_lower_upper_decade(self):
-        pass
-
-    def test_merge(self):
-        pass
-# to get an update
-class TestRefactorData(unittest.TestCase):
-    def test_display_sea_temps(self):
-        pass
-
-    def test_storm(self):
-        pass
 
 class TestPlot(unittest.TestCase):
     def test_plot_standard_anomalies(self):
@@ -51,21 +44,6 @@ class TestPlot(unittest.TestCase):
     def test_plot_standard_confidence(self):
         plot_standard_confidence(SeaTemps().sea_values)
         self.assertTrue(os.path.exists('sst_standard_confidence.png'))
-
-    def test_plot_decade_anomalies(self):
-        pass
-        # plot_decade_anomalies(data)
-        # self.assertTrue(os.path.exists('sst_decade.png'))
-
-    def test_plot_decade_confidence(self):
-        pass
-        # plot_decade_confidence(confidence)
-        # self.assertTrue(os.path.exists('sst_up_low_confidence.png'))
-
-    def test_merge_decade(self):
-        pass
-        # merge_decade(merged)
-        # self.assertTrue(os.path.exists('sst_merge.png'))
 
     def test_graphStorm(self):
         graphStorm(StormData().hurricane_values)
