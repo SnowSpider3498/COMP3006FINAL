@@ -69,6 +69,7 @@ def merge_decade(args):
     plt.show()
     plt.savefig('sst_merge')
 
+
 def graphStorm(args):
     year, nameStorm, hurricane, majhurricane = [], [], [], []
     for x in args:
