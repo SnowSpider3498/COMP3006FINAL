@@ -43,7 +43,23 @@ package dependencies listed in requirements.txt
 
 -**p**: plots figures associated with command
 
--**csv** *folder name*: saves csvs associated with command to data/folder name of user input
+-**o** *folder name*: saves csvs associated with command to data/folder name of user input
   
--**tropical**: Displays the total tropical storms for a specific year
+ -**s**: Sorts by two main options ('anomaly', 'confidence') and two command specifc options ('merge', 'tropical')
   
+-**tropical**: Displays the total tropical storms for a specific year (Command specific)
+  
+### Code Instructions ###
+
+For standard sea temperature results, displayed in the order: (year, yearly anomaly, lower confidence bound, upper confidence bound), simply call print.
+  
+Adding the following 'sort' features including 'anomaly', 'confidence', or 'tropical', will produce a specific output focused on the sorting description. 
+
+(sorting by tropical will show ANNUAL HURRICANE DATA ONLY)
+
+To save a file to csv, apply the '-o' followed by a file name of user choice.
+This works for all commands/sort except for the strict command(s) of Storm, Severe and merge_data (These are plot only).
+
+When saving a file to csv using '-o', a graph is created ONLY for the following commands:
+        python3 XXXXX
+
