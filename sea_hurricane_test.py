@@ -2,7 +2,7 @@ import unittest
 from main import *
 
 
-class MainTest(unittest.TestCase):
+class TestMain(unittest.TestCase):
 
     def test_print(self):
 
