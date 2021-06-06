@@ -28,7 +28,9 @@ package dependencies listed in requirements.txt
 
 **by_decade**: Displays per decade data
 
-#****: explores salary per points
+**Storm**: explores salary per points
+  
+**Storm**: explores salary per points
 
 ### [optional arguments]
 -**anomaly**: simply will show anomaly sst data, can be saved in a csv by providing an outfile
