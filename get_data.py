@@ -93,8 +93,7 @@ class StormData:
         return iter(self.hurricane_values)
 
     def _get_data(self):
-        # getting html
-
+        # parsing through html
         soup = BS(self.page, 'html.parser')
 
         logging.debug('response code from url: 200')
@@ -162,7 +161,6 @@ class StormData:
 
     def stormDataSet(self):
         logging.debug('reformat-hurricane-data')
-
         # Appends values from refactor_data into the class list above
         for i in self.csvStormDat:
             self.hurricane_values.append(Storm(i[0], i[1], i[2], i[3]))
