@@ -5,14 +5,15 @@ import get_data
 from data_manipulation import *
 from main import *
 from plot import *
+import pandas as pd
 
 
 class TestSeaTemps(unittest.TestCase):
     def test_iterable(self):
         iter(get_data.SeaTemps())
 
+    # make sure the website returns a status code
     def test_get_data(self):
-        # make sure the website returns a status code
         self.assertTrue(get_data.SeaTemps().response == 200)
 
 
@@ -25,16 +26,35 @@ class TestRefactor_Data(unittest.TestCase):
         self.assertEqual(0.23, test1.lower_confidence)
         self.assertEqual(0.65, test1.upper_confidence)
 
+    def test_hurricane_conversion(self):
+        test2 = Storm(2005, 25, 15, 8)
+        self.assertEqual(2005, test2.year)
+        self.assertEqual(25, test2.storms)
+        self.assertEqual(15, test2.hurricanes)
+        self.assertEqual(8, test2.majors)
+
+
+class Test_Data_Manipulation(unittest.TestCase):
+    sea_test = SeaTemps()
+
+    # Checks to make sure a Pandas dataframe is created
+    def test_avg_per_decade(self):
+        self.assertEqual(type(average_per_decade(self.sea_test.sea_values)), pd.DataFrame)
+        self.assertEqual(type(avg_lower_upper_decade(self.sea_test.sea_values)), pd.DataFrame)
+        self.assertEqual(type(merge(self.sea_test.sea_values)), pd.DataFrame)
+
+
 class TestStormData(unittest.TestCase):
     def test_iterable(self):
         iter(get_data.StormData())
 
     def test_get_data(self):
         self.assertTrue(StormData().response == 200)
-    
+
     def test_stormCSV(self):
         get_data.StormData().stormCSV()
         self.assertTrue(os.path.exists('storm-data.csv'))
+
 
 class TestPlot(unittest.TestCase):
     def test_plot_standard_anomalies(self):
