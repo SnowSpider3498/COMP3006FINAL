@@ -37,6 +37,8 @@ package dependencies listed in requirements.txt
   
 -**merge**: ONLY Plots merged data between sst Anomalies and Confidence Intervals
 
+-**tropical**: displays tropical storm data that can be overlayed with annual ocean temperature anomalies using the 'merge_storms' command
+
 -**o** *folder name*: saves csvs associated with command to data/folder name of user input (encorperates plot command)
   
  -**s**: Sorts by two main options ('anomaly', 'confidence') and two command specifc options ('merge', 'tropical' - both print command only)
