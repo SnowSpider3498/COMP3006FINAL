@@ -45,18 +45,22 @@ class Test_Data_Manipulation(unittest.TestCase):
 
 
 class TestStormData(unittest.TestCase):
+    # Checks for iteration
     def test_iterable(self):
         iter(get_data.StormData())
-
+    
+    # Checks that the website is accessable
     def test_get_data(self):
         self.assertTrue(StormData().response == 200)
-
+    
+    # Checks for a created csv
     def test_stormCSV(self):
         get_data.StormData().stormCSV()
         self.assertTrue(os.path.exists('storm-data.csv'))
 
 
 class TestPlot(unittest.TestCase):
+    # Each of the following check for their specific plots
     def test_plot_standard_anomalies(self):
         plot_standard_anomalies(SeaTemps().sea_values)
         self.assertTrue(os.path.exists('sst_standard_anomalies.png'))
