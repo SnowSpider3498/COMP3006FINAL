@@ -44,7 +44,19 @@ package dependencies listed in requirements.txt
  -**s**: Sorts by two main options ('anomaly', 'confidence') and two command specifc options ('merge', 'tropical' - both print command only)
   
  -**p**: Plots data for plotting capable sorts
+ 
+ ### Data Set Explanation ###
+ 
+ For sea temperatures, we used a Hadley Climate research website that focused on specifc sea anomalies and the confidence intervals around such from 1850 to 2021, and used data specifically focused in the Northern Hemisphere. For Hurricane data, we pulled from Storm Fax, which held information on hurricane occurance, intensity and frequency from 1851 to 2017, also in the Northern Hemisphere.
   
+### Research Question Explanation ###
+
+Our question was focused on if sea temperature played a role in hurricane frequency and intensity.
+
+### Conclusion ###
+
+Although this is a very new topic, a clear correlation can be made between sea temperature anomalies and the amount of tropical storms and major hurricanes occuring in the Northern hemisphere. As data became more accurate over time, the margin of error has decreased and shown a new light on what role these two variables play.
+
 ### Code Instructions ###
 
 For standard sea temperature results, displayed in the order: (year, yearly anomaly, lower confidence bound, upper confidence bound), simply call print.
@@ -60,8 +72,8 @@ When saving a file to csv using '-o', a graph is created for all commands except
         python3 main.py by_decade ---- This produces ONLY a standard out or requested csv but no plot (for data specific reasons)
     
 To see hurricane data overlayed with sea temperature anomaly data, call either function of:
-        python3 main.py merge_storms ---- Looks at all tropical storms (NO CSV CAN BE SAVED)
-        python3 main.py merge_majors ---- Looks at ONLY major storms (NO CSV CAN BE SAVED)
+        python3 main.py merge_storms ---- Looks at all tropical storms (NO CSV CAN BE SAVED) (GRAPH ONLY)
+        python3 main.py merge_majors ---- Looks at ONLY major storms (NO CSV CAN BE SAVED) (GRAPH ONLY)
       
 CSV files are only allowed on specific files due to display orientation constraints
         
