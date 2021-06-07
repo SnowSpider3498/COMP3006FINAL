@@ -70,10 +70,8 @@ class SeaTemps:
 
         else:
             logging.debug(self.annual_nh_sea_temps.status_code)
-
-
-##############################################################################################
-
+            
+            
 
 class StormData:
     # Accesses URL and requests status code
